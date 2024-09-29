@@ -11,14 +11,14 @@ pc = Pinecone(api_key=pinecone_api_key)
 
 index_name = "drip-index"
 
-def query_by_vector(vector):
+def query_by_vector(json_val, vector):
     while not pc.describe_index(index_name).status['ready']:
         time.sleep(1)
         
     index = pc.Index(index_name)
-
+    namespace = json_val["type"] + "PROD_01"
     query_results = index.query(
-        namespace="main-dripspace",
+        namespace=namespace,
         vector=vector,
         top_k=3,
         include_values=False

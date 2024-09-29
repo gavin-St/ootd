@@ -32,7 +32,7 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "nike sneakers",
+  "q": "new balance sneakers",
   "hl": "en",
   "gl": "us",
   "location": "United States",
