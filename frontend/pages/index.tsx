@@ -217,7 +217,7 @@ export default function EnhancedOutfitDashboard() {
                 Item Details
               </h2>
               {items.length > 0 ? (
-                <Tabs defaultValue="0" className="w-full">
+                <Tabs defaultValue="0" className="w-full" value={selectedItemIndex.toString()}>
                   <TabsList className="grid w-full grid-cols-3 mb-4">
                     {items.map((_, index) => (
                       <TabsTrigger
