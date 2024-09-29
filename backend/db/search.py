@@ -10,9 +10,10 @@ pinecone_api_key = os.getenv("PINECONE_API_KEY")
 pc = Pinecone(api_key=pinecone_api_key)
 
 def query_by_vector(vector):
-    query_results1 = index.query(
-        namespace="example-namespace1",
-        vector=[1.0, 1.5],
-        top_k=3,
-        include_values=True
+    query_results = index.query(
+        namespace="main-dripspace",
+        vector=vector,
+        top_k=4,
+        include_values=False
     )
+    return query_results[matches]

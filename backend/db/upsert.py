@@ -35,7 +35,7 @@ def upsert_vector(vector):
         namespace="main-dripspace"
     )
 
-def upsert_bulk_vectors(vectors):
+def upsert_bulk_vectors(json_arr, values_arr):
     if not pc.has_index(index_name):
         pc.create_index(
             name=index_name,
@@ -52,8 +52,10 @@ def upsert_bulk_vectors(vectors):
         
     index = pc.Index(index_name)
 
+    vectors_to_upsert = [{'id': i, 'json': json[i], 'values': vector} for i, vector in enumerate(values_arr)]
+
     index.upsert(
-        vectors=vectors,
+        vectors=vectors_to_upsert,
         namespace="main-dripspace"
     )
 
