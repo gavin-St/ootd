@@ -58,7 +58,14 @@ def upsert_bulk_vectors(json_arr, values_arr):
 
     vectors_to_upsert = [{'id': str(uuid.uuid4()), 'metadata': flatten(json_arr[i]), 'values': vector} for i, vector in enumerate(values_arr)]
     
-    namespace = json_arr[0]["gender"] + json_arr[0]["type"] + "_PROD_01"
+    namespace = "Womens" + json_arr[0]["type"] + "_PROD_01"
+
+    index.upsert(
+        vectors=vectors_to_upsert,
+        namespace=namespace
+    )
+
+    namespace = "Mens" + json_arr[0]["type"] + "_PROD_01"
 
     index.upsert(
         vectors=vectors_to_upsert,

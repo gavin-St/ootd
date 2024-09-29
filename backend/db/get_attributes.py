@@ -20,6 +20,7 @@ class Features(BaseModel):
 class ClothingItem(BaseModel):
     imgUrl: str
     shoppingUrl: str
+    gender: str
     type: str
     price: str
     color: str
@@ -52,7 +53,7 @@ def get_attributes(image_path):
                         "type": "text",
                         "text": f"""
               JSON:
-              {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", 
+              {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", Gender: "Mens" | "Womens"
               color: "string", brightness: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
               additionalClothingProperties: [] }} 
 

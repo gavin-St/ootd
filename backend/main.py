@@ -23,6 +23,7 @@ def process():
     file.save('static/input.jpg')
     run_sam(x_coord, y_coord)
     attribute_json = get_attributes('static/mask.jpg')
+    print(attribute_json)
     embedding_vector = get_embedding(attribute_json)
     result = query_by_vector(attribute_json, embedding_vector)
     print(result)
