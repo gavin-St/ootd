@@ -16,11 +16,12 @@ def query_by_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-    namespace = json_val["type"] + "_PROD_01"
+    namespace = json_val["type"] + "PROD_01"
     query_results = index.query(
         namespace=namespace,
         vector=vector,
         top_k=3,
-        include_values=False
+        include_values=False,
+        include_metadata=True
     )
-    return query_results
+    return query_results["matches"]
