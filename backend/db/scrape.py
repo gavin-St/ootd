@@ -35,7 +35,7 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "new balance sneakers",
+  "q": "mens jeans",
   "hl": "en",
   "gl": "us",
   "location": "United States",
@@ -67,7 +67,7 @@ def create_data_json_dump():
                             "text": f"""
               JSON:
               {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", 
-              color: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
+              color: "string", brightness: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
               additionalClothingProperties: [] }} 
 
               EXTRA_DATA:
@@ -75,7 +75,7 @@ def create_data_json_dump():
 
               Prompt:
               Based on the attached clothing image and EXTRA_DATA from the google product page, fill in the attached JSON file 
-              along with any additional properties that can be observed on the clothing. Ignore sizing and condition details.
+              along with any additional properties that can be observed on the clothing. Be very specific about color and pattern. Ignore sizing and condition details.
               """,
                         },
                         {

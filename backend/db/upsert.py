@@ -31,7 +31,7 @@ def upsert_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-    namespace = json_val["type"] + "PROD_01"
+    namespace = json_val["type"] + "_PROD_01"
     index.upsert(
         vectors=[
             {'id': str(uuid.uuid4()), 'metadata': flatten(json_val), values: vector}
@@ -58,7 +58,7 @@ def upsert_bulk_vectors(json_arr, values_arr):
 
     vectors_to_upsert = [{'id': str(uuid.uuid4()), 'metadata': flatten(json_arr[i]), 'values': vector} for i, vector in enumerate(values_arr)]
     
-    namespace = json_arr[0]["type"] + "PROD_01"
+    namespace = json_arr[0]["type"] + "_PROD_01"
 
     index.upsert(
         vectors=vectors_to_upsert,

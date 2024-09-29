@@ -21,6 +21,7 @@ def query_by_vector(json_val, vector):
         namespace=namespace,
         vector=vector,
         top_k=3,
-        include_values=False
+        include_values=False,
+        include_metadata=True
     )
-    return query_results
+    return query_results["matches"]
