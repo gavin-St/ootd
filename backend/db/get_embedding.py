@@ -1,7 +1,5 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-from upsert import upsert_vector, upsert_bulk_vectors, query_index
-
 import json
 import os
 
