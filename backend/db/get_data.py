@@ -30,23 +30,24 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "mens hoodies",
+  "q": "mens shoes",
   "hl": "en",
   "gl": "us",
   "location": "United States",
   "direct_link": "true"
 }
 
-search = GoogleSearch(params)
-results = search.get_dict()
-
-client = OpenAI()
+vectors = []
+clothing_items = []
 
 def create_data_json_dump():
   """
   Creates a big json file of all clothing data scraped
   """
-  clothing_items = []
+  search = GoogleSearch(params)
+  results = search.get_dict()
+
+  client = OpenAI()
   for product in results.get("shopping_results", []):
     response = client.beta.chat.completions.parse(
       model="gpt-4o-mini",
@@ -74,11 +75,6 @@ def create_data_json_dump():
     response_product.imgUrl = product["thumbnail"]
     response_product.shoppingUrl = product["link"]
     clothing_items.append(response_product)
-
-  clothing_items_json = [item.dict() for item in clothing_items]
-  return json.dumps(clothing_items_json, indent=2)
-
-
-jsonDumped = create_data_json_dump()
-vector = create_embedding_from_json(jsonDumped)
-print(vector)
+    json_dump = json.dumps(response_product.dict(), indent=2)
+    vector = create_embedding_from_json(json_dump)
+    vectors.append(vector)
