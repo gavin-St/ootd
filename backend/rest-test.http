@@ -1,0 +1,13 @@
+POST http://127.0.0.1:5000/sam?x_coord=1000&y_coord=2500 HTTP/1.1
+content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="sam/alex.jpg"
+Content-Type: image/jpg
+
+< sam/alex.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
