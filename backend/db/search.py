@@ -9,11 +9,18 @@ load_dotenv()
 pinecone_api_key = os.getenv("PINECONE_API_KEY")
 pc = Pinecone(api_key=pinecone_api_key)
 
+index_name = "drip-index"
+
 def query_by_vector(vector):
+    while not pc.describe_index(index_name).status['ready']:
+        time.sleep(1)
+        
+    index = pc.Index(index_name)
+
     query_results = index.query(
         namespace="main-dripspace",
         vector=vector,
         top_k=4,
         include_values=False
     )
-    return query_results[matches]
+    return query_results
