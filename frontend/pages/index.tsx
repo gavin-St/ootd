@@ -177,13 +177,10 @@ export default function EnhancedOutfitDashboard() {
     if (!fileImage) return;
     const formData = new FormData();
 
-    formData.append("image", fileImage);
+    formData.append("file", fileImage);
+    console.log(fileImage)
 
-    formData.append("x_coord", x.toString());
-    formData.append("y_coord", y.toString());
-    formData.append("text", "title");
-
-    const apiUrl = `http://sdfsdfsdf/sam?x_coord=${x}&y_coord=${y}`;
+    const apiUrl = `http://127.0.0.1:5000/?x=${x}&y=${y}`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
