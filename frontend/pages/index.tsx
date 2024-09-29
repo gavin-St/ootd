@@ -132,6 +132,7 @@ export default function EnhancedOutfitDashboard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const detailsCardRef = useRef<HTMLDivElement>(null);
   const uploadedImageRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -162,17 +163,29 @@ export default function EnhancedOutfitDashboard() {
   };
 
   const handleImageClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!uploadedImageRef.current) return;
-
+    if (!uploadedImageRef.current || !imageRef.current) return;
+  
     const rect = uploadedImageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-
-    setClickCoordinates([x, y]);
-
-    sendApiRequest(x, y);
+  
+    const displayedImageWidth = imageRef.current.offsetWidth;
+    const displayedImageHeight = imageRef.current.offsetHeight;
+  
+    const originalImageWidth = imageRef.current.naturalWidth;
+    const originalImageHeight = imageRef.current.naturalHeight;
+  
+    const xScale = originalImageWidth / displayedImageWidth;
+    const yScale = originalImageHeight / displayedImageHeight;
+  
+    const adjustedX = x * xScale;
+    const adjustedY = y * yScale;
+  
+    setClickCoordinates([adjustedX, adjustedY]);
+  
+    sendApiRequest(adjustedX, adjustedY);
   };
-
+  
   const sendApiRequest = async (x: number, y: number) => {
     if (!fileImage) return;
     const formData = new FormData();
@@ -241,6 +254,7 @@ export default function EnhancedOutfitDashboard() {
                     width={500}
                     height={500}
                     className="w-full h-auto rounded-lg"
+                    ref={imageRef}
                   />
                   <svg className="absolute top-0 left-0 w-full h-full">
                     {sampleDetectedAreas.map((area, index) => (
