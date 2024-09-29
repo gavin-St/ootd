@@ -27,24 +27,7 @@ def generate_data(json_arr):
   query_index()
 
 test_jsons = [
-json.dumps({
-  "type": "Sweater",
-  "color": "Black",
-  "brand": "Amiri",
-  "features": {
-    "material": "Cotton",
-    "logo_text": "Amiri Motions M.A. Auto District, CA",
-    "neck_type": "Crewneck"
-  },
-  "style": "casual",
-  "additional_properties": {
-    "fit": "regular",
-    "sleeve_type": "long sleeve",
-    "embroidery": "yes",
-    "patch_position": "left chest"
-  }
-}),
-json.dumps({
+{
   "type": "Jacket",
   "color": "Black",
   "brand": "Stone Island",
@@ -60,8 +43,8 @@ json.dumps({
     "cuffs": "ribbed",
     "fit": "relaxed"
   }
-}),
-json.dumps({
+},
+{
   "type": "T-shirt",
   "color": "White",
   "brand": "A Bathing Ape",
@@ -78,9 +61,24 @@ json.dumps({
     "graphic_position": "front",
     "print_style": "camo"
   }
-})
+},
+{
+  "type": "Sweater",
+  "color": "Black",
+  "brand": "Amiri",
+  "features": {
+    "material": "Cotton",
+    "logo_text": "Amiri Motions M.A. Auto District, CA",
+    "neck_type": "Crewneck"
+  },
+  "style": "casual",
+  "additional_properties": {
+    "fit": "regular",
+    "sleeve_type": "long sleeve",
+    "embroidery": "yes",
+    "patch_position": "left chest"
+  }
+}
 ]
 
-print(type(test_jsons[0]))
-print(type(test_jsons[1]))
 generate_data(test_jsons)

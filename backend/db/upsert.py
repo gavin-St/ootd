@@ -31,12 +31,12 @@ def upsert_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-
+    namespace = json_val[type] + "TEST123"
     index.upsert(
         vectors=[
-            {'id': str(uuid.uuid4()), 'metadata': flatten(json.loads(json_val)), values: vector}
+            {'id': str(uuid.uuid4()), 'metadata': flatten(json_val), values: vector}
         ],
-        namespace="main-dripspace"
+        namespace=namespace
     )
 
 def upsert_bulk_vectors(json_arr, values_arr):
@@ -56,11 +56,13 @@ def upsert_bulk_vectors(json_arr, values_arr):
         
     index = pc.Index(index_name)
 
-    vectors_to_upsert = [{'id': str(uuid.uuid4()), 'metadata': flatten(json.loads(json_arr[i])), 'values': vector} for i, vector in enumerate(values_arr)]
+    vectors_to_upsert = [{'id': str(uuid.uuid4()), 'metadata': flatten(json_arr[i]), 'values': vector} for i, vector in enumerate(values_arr)]
+    
+    namespace = json_arr[0]["type"] + "TEST123"
 
     index.upsert(
         vectors=vectors_to_upsert,
-        namespace="main-dripspace"
+        namespace=namespace
     )
 
 def query_index():

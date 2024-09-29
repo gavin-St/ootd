@@ -83,9 +83,9 @@ def create_data_json_dump():
       clothing_items.append(response_product)
 
       # this is the json of the product
-      json_dump = json.dumps(response_product.dict(), indent=2)
-      print(json_dump)
-      json_arr.append(json_dump)
+      json_result = response_product.dict()
+      print(json_result)
+      json_arr.append(json_result)
         
     return json_arr
 
