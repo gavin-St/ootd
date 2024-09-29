@@ -35,7 +35,7 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "mens jeans",
+  "q": "mens denim jacket",
   "hl": "en",
   "gl": "us",
   "location": "United States",
