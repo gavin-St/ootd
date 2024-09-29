@@ -1,16 +1,24 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from sam.sam import run_sam
+from db.get_attributes import get_attributes
+from db.get_embedding import get_embedding
+from db.search import query_by_vector
+import json
 
 app = Flask(__name__)
 
-@app.route('/sam', methods = ['POST'])
-def sam():
-    x_coord = request.args.get('x_coord')
-    y_coord = request.args.get('y_coord')
+@app.route('/', methods = ['POST'])
+def process():
+    x_coord = request.args.get('x')
+    y_coord = request.args.get('y')
     file = request.files['image']
     file.save('static/input.jpg')
     run_sam(x_coord, y_coord)
-    return send_file('static/mask.jpg', mimetype='image/jpeg')
+    attribute_json = get_attributes('static/mask.jpg')
+    embedding_vector = get_embedding(attribute_json)
+    result = query_by_vector(attribute_json, embedding_vector)
+    print(result)
+    return jsonify(result)
 
 
 @app.route('/get_bitmask', methods = ['GET'])
