@@ -45,5 +45,6 @@ json_data = {
 }
 
 vector = create_embedding_from_json(json_data)
-query_index()
 print(vector)
+
+query_index()
