@@ -9,11 +9,10 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def create_embedding_from_json(data):
+def get_embedding(data):
     """
     Converts the given JSON object into a text embedding vector using OpenAI's embedding model.
     """
-    # Serialize the JSON data to a descriptive string
     serialized_string = json.dumps(data)
 
     # Generate the embedding using OpenAI's model

@@ -2,10 +2,8 @@ from serpapi import GoogleSearch
 from pydantic import BaseModel
 from typing import List
 from openai import OpenAI
-from get_embedding import create_embedding_from_json
 from dotenv import load_dotenv
-from upsert import upsert_vector, upsert_bulk_vectors, query_index
-from generate_data import generate_data
+from async_generate_data import generate_data
 
 import json
 import os
@@ -34,7 +32,7 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "mens shoes",
+  "q": "nike sneakers",
   "hl": "en",
   "gl": "us",
   "location": "United States",
@@ -70,7 +68,7 @@ def create_data_json_dump():
 
               Prompt:
               Based on the attached clothing image and EXTRA_DATA from the google product page, fill in the attached JSON file 
-              along with any additional properties that can be observed on the clothing. Ignore sizing details.
+              along with any additional properties that can be observed on the clothing. Ignore sizing and condition details.
               '''
           },
       ],

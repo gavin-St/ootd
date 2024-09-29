@@ -20,7 +20,7 @@ def query_by_vector(vector):
     query_results = index.query(
         namespace="main-dripspace",
         vector=vector,
-        top_k=4,
+        top_k=3,
         include_values=False
     )
     return query_results

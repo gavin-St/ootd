@@ -2,7 +2,7 @@ from serpapi import GoogleSearch
 from pydantic import BaseModel
 from typing import List
 from openai import OpenAI
-from get_embedding import create_embedding_from_json
+from get_embedding import get_embedding
 from dotenv import load_dotenv
 from upsert import upsert_vector, upsert_bulk_vectors, query_index
 
@@ -19,7 +19,7 @@ def generate_data(json_arr):
   vectors_arr = []
   for json in json_arr:
     # this is the vector embedding of the product
-    vector = create_embedding_from_json(json)
+    vector = get_embedding(json)
     vectors_arr.append(vector)
 
   upsert_bulk_vectors(json_arr, vectors_arr)
@@ -81,4 +81,4 @@ test_jsons = [
 }
 ]
 
-generate_data(test_jsons)
+# generate_data(test_jsons)

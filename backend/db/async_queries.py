@@ -1,10 +1,10 @@
 from upsert import upsert_vector, upsert_bulk_vectors, query_index
 from search import query_by_vector
-from get_embedding import create_embedding_from_json
+from get_embedding import get_embedding
 
 import json
 
-original_json = json.dumps({
+original_json = {
   "type": "Shoes",
   "color": "White",
   "brand": "New Balance",
@@ -12,9 +12,9 @@ original_json = json.dumps({
   "material": "Mesh and Synthetic",
   "features": ["Laces", "Logo on the side", "Reinforced heel"],
   "additionalClothingProperties": ["Athletic design", "Cushioned sole"]
-})
+}
 
-vector = create_embedding_from_json(original_json)
+vector = get_embedding(original_json)
 print(vector)
 result = query_by_vector(vector)
 print(result)
