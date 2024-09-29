@@ -16,7 +16,7 @@ def query_by_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-    namespace = json_val["type"] + "PROD_01"
+    namespace = json_val["type"] + "_PROD_01"
     query_results = index.query(
         namespace=namespace,
         vector=vector,
@@ -24,4 +24,6 @@ def query_by_vector(json_val, vector):
         include_values=False,
         include_metadata=True
     )
-    return query_results["matches"]
+    # Extract metadata from all matches
+    metadata_arr = [match["metadata"] for match in query_results["matches"]]
+    return metadata_arr

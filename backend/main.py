@@ -1,4 +1,5 @@
 from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify
 from sam.sam import run_sam
 from db.get_attributes import get_attributes
 from db.get_embedding import get_embedding
@@ -16,16 +17,16 @@ def process():
     x_coord = int(float(request.args.get('x')))
     y_coord = int(float(request.args.get('y')))
     print(x_coord, y_coord)
-    file = request.files['image']
-    print(file)
+    file = request.files["file"]
+    print(request.get_data())
+
     file.save('static/input.jpg')
     run_sam(x_coord, y_coord)
     attribute_json = get_attributes('static/mask.jpg')
     embedding_vector = get_embedding(attribute_json)
     result = query_by_vector(attribute_json, embedding_vector)
     print(result)
-    response = jsonify(result)
-    return response
+    return jsonify(result)
 
 
 @app.route('/get_bitmask', methods = ['GET'])
