@@ -1,29 +1,28 @@
-import openai
+from openai import OpenAI
+from dotenv import load_dotenv
+from upsert import upsert_vector, upsert_bulk_vectors, query_index
+
 import json
 import os
-from dotenv import load_dotenv
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-pinecone_api_key = os.getenv("PINECONE_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def create_embedding_from_json(data):
     """
     Converts the given JSON object into a text embedding vector using OpenAI's embedding model.
     """
     # Serialize the JSON data to a descriptive string
-    serialized_string = JSON.stringify(data)
-    
+    serialized_string = json.dumps(data)
+
     # Generate the embedding using OpenAI's model
-    response = openai.Embedding.create(
-        model="text-embedding-ada-002",  # Most cost-effective model for embedding tasks
-        input=serialized_string
-    )
-    
+    response = client.embeddings.create(model="text-embedding-ada-002",  # Most cost-effective model for embedding tasks
+    input=serialized_string)
+
     # Extract the embedding vector (the first embedding in the list)
-    embedding_vector = response["data"][0]["embedding"]
-    
+    embedding_vector = response.data[0].embedding
+
     return embedding_vector
 
 # Example JSON object
@@ -46,4 +45,5 @@ json_data = {
 }
 
 vector = create_embedding_from_json(json_data)
+query_index()
 print(vector)

@@ -1,2 +1,3 @@
 backend/*.env
 ootdenv
+backend/db/__pycache__
