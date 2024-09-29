@@ -21,6 +21,7 @@ class Features(BaseModel):
 class ClothingItem(BaseModel):
     imgUrl: str
     shoppingUrl: str
+    gender: str
     type: str
     price: str
     color: str
@@ -35,7 +36,7 @@ params = {
   "api_key": os.getenv("SCRAPER_API_KEY"),
   "engine": "google_shopping",
   "google_domain": "google.com",
-  "q": "mens leather jacket",
+  "q": "womens jeans",
   "hl": "en",
   "gl": "us",
   "location": "United States",
@@ -66,7 +67,7 @@ def create_data_json_dump():
                             "type": "text",
                             "text": f"""
               JSON:
-              {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", 
+              {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", gender: "Mens" | "Womens",
               color: "string", brightness: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
               additionalClothingProperties: [] }} 
 
@@ -91,7 +92,7 @@ def create_data_json_dump():
         )
         response_product = response.choices[0].message.parsed
         response_product.imgUrl = product["thumbnail"]
-        response_product.shoppingUrl = product["link"]
+        response_product.shoppingUrl = product.get("link", "no-link")
         response_product.price = product["price"]
         clothing_items.append(response_product)
 

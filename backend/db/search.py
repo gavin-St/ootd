@@ -16,7 +16,7 @@ def query_by_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-    namespace = json_val["type"] + "_PROD_01"
+    namespace = json_val["gender"] + json_val["type"] + "_PROD_01"
     query_results = index.query(
         namespace=namespace,
         vector=vector,

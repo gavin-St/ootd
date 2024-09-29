@@ -11,7 +11,7 @@ def run_sam(x_coord, y_coord):
     source = 'static/input.jpg'
     image = cv2.imread(source)
 
-    model = SAM("sam/mobile_sam.pt")
+    model = SAM("sam_b.pt")
     results = model(source, points=[[int(x_coord), int(y_coord)]], labels=[1])
     mask = results[0].masks.data.detach().numpy().squeeze()
     print("--- %s seconds ---" % (time.time() - start_time))
