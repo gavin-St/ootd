@@ -15,4 +15,4 @@ def sam():
 
 @app.route('/get_bitmask', methods = ['GET'])
 def get_bitmask():
-    return send_file('static/bitmask.jpg', mimetype='image/jpeg')
+    return send_file('static/bitmask.txt')
