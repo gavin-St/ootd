@@ -4,3 +4,5 @@ backend/_pycache_
 backend/sam/sam_vit_l_0b3195.pth
 backend/sam/.ipynb_checkpoints
 backend/db/__pycache__
+*.jpg
+*.JPG

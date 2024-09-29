@@ -53,11 +53,11 @@ def get_attributes(image_path):
                         "text": f"""
               JSON:
               {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", 
-              color: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
+              color: "string", brightness: "string", brand: "string", "style": "string", material: "string", pattern: "string", features: {{}}, 
               additionalClothingProperties: [] }} 
 
               Prompt:
-              Based on the attached clothing image fill in the attached JSON file along with any additional unique properties that can be observed on the clothing. Ignore sizing and condition details.
+              Based on the attached clothing image fill in the attached JSON file along with any additional unique properties that can be observed on the clothing. Be very specific about colour and pattern. Ignore sizing and condition details.
               """,
                     },
                     {
