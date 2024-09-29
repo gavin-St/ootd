@@ -5,6 +5,7 @@ from openai import OpenAI
 from get_embedding import create_embedding_from_json
 from dotenv import load_dotenv
 from upsert import upsert_vector, upsert_bulk_vectors, query_index
+from generate_data import generate_data
 
 import json
 import os
@@ -45,23 +46,23 @@ json_arr = []
 clothing_items = []
 
 def create_data_json_dump():
-  """
-  Creates a big json file of all clothing data scraped
-  """
-  search = GoogleSearch(params)
-  results = search.get_dict()
+    """
+    Creates a big json file of all clothing data scraped
+    """
+    search = GoogleSearch(params)
+    results = search.get_dict()
 
-  client = OpenAI()
-  for product in results.get("shopping_results", []):
-    response = client.beta.chat.completions.parse(
+    client = OpenAI()
+    for product in results.get("shopping_results", []):
+      response = client.beta.chat.completions.parse(
       model="gpt-4o-mini",
       messages=[
-        {
+          {
               "role": "user",
               "content": f'''
               JSON:
               {{ type: "Shoes" | "Jacket" | "Shirt" | "Pants" | "Dress" | "Hat" | "Glasses" | "Chain" | "Sweater" | "Skirt", 
-              color: "string", brand: "string", "style": "string", material: "string", features: [], 
+              color: "string", brand: "string", "style": "string", material: "string", features: {{}}, 
               additionalClothingProperties: [] }} 
 
               EXTRA_DATA:
@@ -74,23 +75,18 @@ def create_data_json_dump():
           },
       ],
       response_format=ClothingItem,
-    )
-    response_product = response.choices[0].message.parsed
-    response_product.imgUrl = product["thumbnail"]
-    response_product.shoppingUrl = product["link"]
-    response_product.price = product["price"]
-    clothing_items.append(response_product)
+      )
+      response_product = response.choices[0].message.parsed
+      response_product.imgUrl = product["thumbnail"]
+      response_product.shoppingUrl = product["link"]
+      response_product.price = product["price"]
+      clothing_items.append(response_product)
 
-    # this is the json of the product
-    json_dump = json.dumps(response_product.dict(), indent=2)
-    print(json_dump)
-    
-    # this is the vector embedding of the product
-    vector = create_embedding_from_json(json_dump)
-    vectors_arr.append(vector)
+      # this is the json of the product
+      json_dump = json.dumps(response_product.dict(), indent=2)
+      print(json_dump)
+      json_arr.append(json_dump)
+        
+    return json_arr
 
-  upsert_bulk_vectors(json_arr, vectors_arr)
-  time.sleep(10)
-  query()
-
-create_data_json_dump()
+generate_data(create_data_json_dump())
