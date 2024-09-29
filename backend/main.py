@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from sam.sam import run_sam
 from db.get_attributes import get_attributes
 from db.get_embedding import get_embedding
@@ -18,7 +18,7 @@ def process():
     embedding_vector = get_embedding(attribute_json)
     result = query_by_vector(attribute_json, embedding_vector)
     print(result)
-    return result
+    return jsonify(result)
 
 
 @app.route('/get_bitmask', methods = ['GET'])

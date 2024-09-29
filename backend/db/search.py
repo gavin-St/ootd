@@ -24,4 +24,6 @@ def query_by_vector(json_val, vector):
         include_values=False,
         include_metadata=True
     )
-    return query_results["matches"]
+    # Extract metadata from all matches
+    metadata_arr = [match["metadata"] for match in query_results["matches"]]
+    return metadata_arr
