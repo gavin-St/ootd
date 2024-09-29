@@ -76,6 +76,8 @@ def create_data_json_dump():
     response_product.shoppingUrl = product["link"]
     resposne_product.price = product["price"]
     clothing_items.append(response_product)
+    # this is the json of the product
     json_dump = json.dumps(response_product.dict(), indent=2)
+    # this is the vector embedding of the product
     vector = create_embedding_from_json(json_dump)
     vectors.append(vector)
