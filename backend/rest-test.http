@@ -6,8 +6,11 @@ Content-Disposition: form-data; name="text"
 
 title
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="image"; filename="sam/alex.jpg"
-Content-Type: image/jpg
+Content-Disposition: form-data; name="image"; filename="sam/IMG_6647.jpg"
+Content-Type: image/jpeg
 
-< sam/alex.jpg
+< sam/IMG_6647.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+GET http://127.0.0.1:5000/get_bitmask HTTP/1.1

@@ -31,7 +31,7 @@ def upsert_vector(json_val, vector):
         time.sleep(1)
         
     index = pc.Index(index_name)
-    namespace = json_val[type] + "PROD_01"
+    namespace = json_val["type"] + "PROD_01"
     index.upsert(
         vectors=[
             {'id': str(uuid.uuid4()), 'metadata': flatten(json_val), values: vector}
