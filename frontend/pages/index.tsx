@@ -33,104 +33,17 @@ interface ClothingItem {
   imageUrl: string;
 }
 
-interface DetectedArea {
-  coords: number[][];
-  items: ClothingItem[];
-}
-
-const sampleDetectedAreas: DetectedArea[] = [
-  {
-    coords: [
-      [10, 10],
-      [150, 10],
-      [150, 200],
-      [10, 200],
-    ],
-    items: [
-      {
-        type: "Jacket",
-        color: "Blue",
-        brand: "Levi's",
-        style: "Denim",
-        material: "Cotton",
-        features: { distressed: true, buttons: 6 },
-        additionalClothingProperties: ["Vintage wash", "Slim fit"],
-        price: 89.99,
-        purchaseLink: "https://example.com/denim-jacket",
-        imageUrl: "/placeholder.svg?height=200&width=200",
-      },
-      {
-        type: "Jacket",
-        color: "Navy",
-        brand: "Gap",
-        style: "Bomber",
-        material: "Polyester",
-        features: { zippered: true, pockets: 4 },
-        additionalClothingProperties: ["Water-resistant", "Lightweight"],
-        price: 79.99,
-        purchaseLink: "https://example.com/bomber-jacket",
-        imageUrl: "/placeholder.svg?height=200&width=200",
-      },
-    ],
-  },
-  {
-    coords: [
-      [160, 100],
-      [300, 100],
-      [280, 250],
-      [180, 250],
-    ],
-    items: [
-      {
-        type: "Shirt",
-        color: "White",
-        brand: "H&M",
-        style: "T-Shirt",
-        material: "Cotton",
-        features: { crewneck: true, "short-sleeved": true },
-        additionalClothingProperties: ["Regular fit", "Breathable fabric"],
-        price: 24.99,
-        purchaseLink: "https://example.com/white-tshirt",
-        imageUrl: "/placeholder.svg?height=200&width=200",
-      },
-    ],
-  },
-  {
-    coords: [
-      [100, 300],
-      [250, 300],
-      [240, 500],
-      [110, 500],
-    ],
-    items: [
-      {
-        type: "Pants",
-        color: "Black",
-        brand: "Zara",
-        style: "Skinny Jeans",
-        material: "Denim",
-        features: { "high-waisted": true, "zip-fly": true },
-        additionalClothingProperties: ["Stretch fabric", "Ankle length"],
-        price: 69.99,
-        purchaseLink: "https://example.com/black-jeans",
-        imageUrl: "/placeholder.svg?height=200&width=200",
-      },
-    ],
-  },
-];
-
 export default function EnhancedOutfitDashboard() {
   const [image, setImage] = useState<string | null>(null);
   const [fileImage, setFileImage] = useState<any>();
-  const [hoveredArea, setHoveredArea] = useState<DetectedArea | null>(null);
-  const [clickedArea, setClickedArea] = useState<DetectedArea | null>(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [clickCoordinates, setClickCoordinates] = useState<
     [number, number] | null
   >(null);
+  const [items, setItems] = useState<ClothingItem[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const detailsCardRef = useRef<HTMLDivElement>(null);
   const uploadedImageRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -149,49 +62,35 @@ export default function EnhancedOutfitDashboard() {
     }
   };
 
-  const handleAreaHover = (area: DetectedArea | null) => {
-    if (!clickedArea) {
-      setHoveredArea(area);
-      setSelectedItemIndex(0);
-    }
-  };
-
-  const handleAreaClick = (area: DetectedArea) => {
-    setClickedArea(area);
-    setHoveredArea(null);
-    setSelectedItemIndex(0);
-  };
-
   const handleImageClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!uploadedImageRef.current || !imageRef.current) return;
-  
+
     const rect = uploadedImageRef.current.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-  
+
     const displayedImageWidth = imageRef.current.offsetWidth;
     const displayedImageHeight = imageRef.current.offsetHeight;
-  
+
     const originalImageWidth = imageRef.current.naturalWidth;
     const originalImageHeight = imageRef.current.naturalHeight;
-  
+
     const xScale = originalImageWidth / displayedImageWidth;
     const yScale = originalImageHeight / displayedImageHeight;
-  
+
     const adjustedX = x * xScale;
     const adjustedY = y * yScale;
-  
+
     setClickCoordinates([adjustedX, adjustedY]);
-  
+
     sendApiRequest(adjustedX, adjustedY);
   };
-  
+
   const sendApiRequest = async (x: number, y: number) => {
     if (!fileImage) return;
     const formData = new FormData();
 
     formData.append("file", fileImage);
-    console.log(fileImage)
 
     const apiUrl = `http://127.0.0.1:5000/?x=${x}&y=${y}`;
 
@@ -205,21 +104,60 @@ export default function EnhancedOutfitDashboard() {
     }
 
     const data = await response.json();
-    console.log(data);
+
+    const processedItems = processApiResponse(data);
+    setItems(processedItems);
+    setSelectedItemIndex(0);
+  };
+
+  const processApiResponse = (data: any[]): ClothingItem[] => {
+    return data.map((item) => {
+      const additionalClothingProperties: string[] = [];
+      const featuresTemp: {
+        [index: string]: { key: string; value: string };
+      } = {};
+
+      // Process additionalClothingProperties
+      Object.keys(item).forEach((key) => {
+        if (key.startsWith("additionalClothingProperties_")) {
+          additionalClothingProperties.push(item[key]);
+        }
+        if (key.startsWith("features_")) {
+          const match = key.match(/^features_(\d+)_(key|value)$/);
+          if (match) {
+            const index = match[1];
+            const subkey = match[2]; // 'key' or 'value'
+            if (!featuresTemp[index])
+              featuresTemp[index] = { key: "", value: "" };
+            featuresTemp[index][subkey] = item[key];
+          }
+        }
+      });
+
+      const featuresObj: ClothingFeature = {};
+      Object.values(featuresTemp).forEach((feat) => {
+        featuresObj[feat.key] = feat.value;
+      });
+
+      let price = parseFloat(item.price.replace("$", ""));
+
+      return {
+        type: item.type,
+        color: item.color,
+        brand: item.brand,
+        style: item.style,
+        material: item.material,
+        features: featuresObj,
+        additionalClothingProperties,
+        price,
+        purchaseLink: item.shoppingUrl,
+        imageUrl: item.imgUrl,
+      };
+    });
   };
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
-  };
-
-  const activeArea = clickedArea || hoveredArea;
-
-  const getEdgePoint = (points: number[][]) => {
-    const x = points.map((p) => p[0]);
-    const y = points.map((p) => p[1]);
-    const maxX = Math.max(...x);
-    const minY = Math.min(...y);
-    return [maxX, minY];
   };
 
   return (
@@ -256,39 +194,6 @@ export default function EnhancedOutfitDashboard() {
                     className="w-full h-auto rounded-lg"
                     ref={imageRef}
                   />
-                  <svg className="absolute top-0 left-0 w-full h-full">
-                    {sampleDetectedAreas.map((area, index) => (
-                      <polygon
-                        key={index}
-                        points={area.coords
-                          .map((point) => point.join(","))
-                          .join(" ")}
-                        fill="rgba(255, 255, 255, 0.2)"
-                        stroke={activeArea === area ? "red" : "white"}
-                        strokeWidth="2"
-                        onMouseEnter={() => handleAreaHover(area)}
-                        onMouseLeave={() => handleAreaHover(null)}
-                        onClick={() => handleAreaClick(area)}
-                        style={{ cursor: "pointer" }}
-                      />
-                    ))}
-                    {activeArea && detailsCardRef.current && (
-                      <line
-                        x1={getEdgePoint(activeArea.coords)[0]}
-                        y1={getEdgePoint(activeArea.coords)[1]}
-                        x2={
-                          detailsCardRef.current.getBoundingClientRect().left -
-                          16
-                        }
-                        y2={
-                          detailsCardRef.current.getBoundingClientRect().top +
-                          20
-                        }
-                        stroke="red"
-                        strokeWidth="2"
-                      />
-                    )}
-                  </svg>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-64 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -306,18 +211,15 @@ export default function EnhancedOutfitDashboard() {
               )}
             </CardContent>
           </Card>
-          <Card
-            className="w-full lg:w-96 dark:bg-gray-800"
-            ref={detailsCardRef}
-          >
+          <Card className="w-full lg:w-96 dark:bg-gray-800">
             <CardContent className="p-4">
               <h2 className="text-2xl font-semibold mb-4 dark:text-white">
                 Item Details
               </h2>
-              {activeArea ? (
+              {items.length > 0 ? (
                 <Tabs defaultValue="0" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-4">
-                    {activeArea.items.map((_, index) => (
+                  <TabsList className="grid w-full grid-cols-3 mb-4">
+                    {items.map((_, index) => (
                       <TabsTrigger
                         key={index}
                         value={index.toString()}
@@ -327,7 +229,7 @@ export default function EnhancedOutfitDashboard() {
                       </TabsTrigger>
                     ))}
                   </TabsList>
-                  {activeArea.items.map((item, index) => (
+                  {items.map((item, index) => (
                     <TabsContent key={index} value={index.toString()}>
                       <div className="space-y-4">
                         <div className="aspect-square overflow-hidden rounded-lg">
@@ -351,32 +253,36 @@ export default function EnhancedOutfitDashboard() {
                           <Badge variant="secondary">{item.color}</Badge>
                           <Badge variant="secondary">{item.material}</Badge>
                         </div>
-                        <div>
-                          <h4 className="font-semibold dark:text-white">
-                            Features:
-                          </h4>
-                          <ul className="list-disc list-inside dark:text-gray-300">
-                            {Object.entries(item.features).map(
-                              ([key, value]) => (
-                                <li key={key}>
-                                  {key}: {value.toString()}
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold dark:text-white">
-                            Additional Properties:
-                          </h4>
-                          <ul className="list-disc list-inside dark:text-gray-300">
-                            {item.additionalClothingProperties.map(
-                              (prop, i) => (
-                                <li key={i}>{prop}</li>
-                              )
-                            )}
-                          </ul>
-                        </div>
+                        {Object.keys(item.features).length > 0 && (
+                          <div>
+                            <h4 className="font-semibold dark:text-white">
+                              Features:
+                            </h4>
+                            <ul className="list-disc list-inside dark:text-gray-300">
+                              {Object.entries(item.features).map(
+                                ([key, value]) => (
+                                  <li key={key}>
+                                    {key}: {value.toString()}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                        {item.additionalClothingProperties.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold dark:text-white">
+                              Additional Properties:
+                            </h4>
+                            <ul className="list-disc list-inside dark:text-gray-300">
+                              {item.additionalClothingProperties.map(
+                                (prop, i) => (
+                                  <li key={i}>{prop}</li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        )}
                         <div className="flex items-center justify-between">
                           <span className="text-2xl font-bold dark:text-white">
                             ${item.price.toFixed(2)}
@@ -397,7 +303,7 @@ export default function EnhancedOutfitDashboard() {
                 </Tabs>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400">
-                  Click or hover over an item to see details
+                  Click on the image to get item details
                 </p>
               )}
             </CardContent>
