@@ -1,24 +1,31 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 from sam.sam import run_sam
 from db.get_attributes import get_attributes
 from db.get_embedding import get_embedding
 from db.search import query_by_vector
 import json
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/', methods = ['POST'])
+@cross_origin()
 def process():
-    x_coord = request.args.get('x')
-    y_coord = request.args.get('y')
+    x_coord = int(float(request.args.get('x')))
+    y_coord = int(float(request.args.get('y')))
+    print(x_coord, y_coord)
     file = request.files['image']
+    print(file)
     file.save('static/input.jpg')
     run_sam(x_coord, y_coord)
     attribute_json = get_attributes('static/mask.jpg')
     embedding_vector = get_embedding(attribute_json)
     result = query_by_vector(attribute_json, embedding_vector)
     print(result)
-    return result
+    response = jsonify(result)
+    return response
 
 
 @app.route('/get_bitmask', methods = ['GET'])
