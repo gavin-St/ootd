@@ -3,6 +3,7 @@ from pinecone import ServerlessSpec
 from dotenv import load_dotenv
 
 import os
+import uuid
 
 load_dotenv()
 
@@ -11,7 +12,7 @@ pc = Pinecone(api_key=pinecone_api_key)
 
 index_name = "drip-index"
 
-def upsert_vector(vector):
+def upsert_vector(json, vector):
     if not pc.has_index(index_name):
         pc.create_index(
             name=index_name,
@@ -30,7 +31,7 @@ def upsert_vector(vector):
 
     index.upsert(
         vectors=[
-            vector
+            {id = uuid.uuid4(), json = json, values = vector}
         ],
         namespace="main-dripspace"
     )
