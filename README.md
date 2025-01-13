@@ -1,12 +1,12 @@
 # OOTD: Computer Vision Outfit Search
 
-https://devpost.com/software/ootd-ae8si9
-
 Ever scroll through TikTok or Instagram and find a super cool outfit, only to wonder where you can get those exact pieces? We noticed that many people face this dilemma daily. Our inspiration for OOTD came from a desire to ungatekeep fashion and make trendy outfits accessible to everyone. We wanted to bridge the gap between seeing a style you love and actually owning it, WITHOUT gatekeepers.
 
 OOTD allows users to upload an image of an outfit they like. Once uploaded, users can click on any piece of clothing within the image, and the app will identify the item and provide information on where to purchase it or find similar styles. Whether it's a unique jacket or a pair of shoes, OOTD helps you find exactly what you're looking for.
 
 Dataset: Google Shopping web scraper -> Computer Vision model -> Semantic Embedding -> Upload to Pinecode Vector DB Backend: We used Flask, Meta's Segment Anything Model (SAM), along with Pinecone DB and OpenAI Embeddings. Frontend: React.js + ShadCN UI Kit + Next.js
+
+Devpost: https://devpost.com/software/ootd-ae8si9
 
 ## App flow
 <img width="675" alt="ootd-1" src="https://github.com/user-attachments/assets/5d027b4f-fc28-44c5-839d-26073c68a92f" />
