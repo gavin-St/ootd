@@ -6,8 +6,6 @@ OOTD allows users to upload an image of an outfit they like. Once uploaded, user
 
 Dataset: Google Shopping web scraper -> Computer Vision model -> Semantic Embedding -> Upload to Pinecode Vector DB Backend: We used Flask, Meta's Segment Anything Model (SAM), along with Pinecone DB and OpenAI Embeddings. Frontend: React.js + ShadCN UI Kit + Next.js
 
-Devpost: https://devpost.com/software/ootd-ae8si9
-
 ## App flow
 <img width="675" alt="ootd-1" src="https://github.com/user-attachments/assets/5d027b4f-fc28-44c5-839d-26073c68a92f" />
 
@@ -22,3 +20,5 @@ Devpost: https://devpost.com/software/ootd-ae8si9
 
 ## OOTD Demo #3
 <img width="675" alt="ootd-6" src="https://github.com/user-attachments/assets/9c4aa312-b204-44d7-bd48-4b40e0d6ada1" />
+
+Devpost: https://devpost.com/software/ootd-ae8si9
